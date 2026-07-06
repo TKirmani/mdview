@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build MDView.app
+        run: ./build.sh
+      - name: Renderer self-check
+        run: swift check.swift
+      - name: Verify bundle
+        run: |
+          codesign --verify --strict build/MDView.app
+          plutil -lint build/MDView.app/Contents/Info.plist
