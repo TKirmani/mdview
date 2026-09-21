@@ -1,0 +1,30 @@
+name: Release
+
+# Tag a commit (git tag v1.1.0 && git push origin v1.1.0) and this builds the
+# Windows installer on a real Windows runner and attaches it to a draft
+# GitHub Release. Draft, so nothing is public until the assets are checked.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: windows/src-tauri
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: windows
+          tagName: ${{ github.ref_name }}
+          releaseName: MDView ${{ github.ref_name }}
+          releaseBody: Windows installer (.msi and setup .exe). See the commit log for changes.
+          releaseDraft: true

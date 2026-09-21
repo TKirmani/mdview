@@ -22,11 +22,23 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["msi", "nsis"],
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/icon.png"],
+    "targets": [
+      "msi",
+      "nsis"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/icon.png",
+      "icons/icon.ico"
+    ],
     "fileAssociations": [
       {
-        "ext": ["md", "markdown", "mdown"],
+        "ext": [
+          "md",
+          "markdown",
+          "mdown"
+        ],
         "name": "Markdown Document",
         "role": "Editor"
       }
