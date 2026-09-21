@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  macos:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
@@ -14,7 +14,41 @@ jobs:
         run: ./build.sh
       - name: Renderer self-check
         run: swift check.swift
+      - name: Markdown editing operations
+        run: swift check-edits.swift
+      - name: Editor wiring (text view, undo, Enter/Tab, image write)
+        run: |
+          swiftc Sources/mdview/MarkdownEditor.swift check-editor.swift -o /tmp/check-editor
+          /tmp/check-editor
+      - name: Interactive preview bridge
+        run: swift check-interactive.swift
+      - name: Document resource scheme
+        run: swift check-resources.swift
+      - name: Windows frontend (headless)
+        run: swift check-windows.swift
       - name: Verify bundle
         run: |
           codesign --verify --strict build/MDView.app
           plutil -lint build/MDView.app/Contents/Info.plist
+      - name: App Store build signs with the sandbox
+        run: |
+          ./build.sh --sandbox
+          codesign -d --entitlements - build/MDView.app 2>&1 | grep -q app-sandbox
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: windows/src-tauri
+      - name: Build the Tauri shell
+        working-directory: windows/src-tauri
+        run: cargo build --release
+      - name: Shared renderer was copied in by build.rs
+        shell: pwsh
+        run: |
+          $missing = @('edits.js','interactive.js','style.css','marked.min.js') |
+            Where-Object { -not (Test-Path "windows/dist/assets/$_") }
+          if ($missing) { throw "build.rs did not copy: $missing" }

@@ -3,3 +3,9 @@ build/
 .DS_Store
 AppIcon.icns
 AppIcon.iconset/
+.claude/settings.local.json
+
+# Tauri (Windows) build output; dist/assets is copied from Sources at build time
+windows/src-tauri/target/
+windows/dist/assets/
+windows/src-tauri/gen/

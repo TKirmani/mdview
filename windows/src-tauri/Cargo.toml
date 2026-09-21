@@ -1,0 +1,19 @@
+[package]
+name = "mdview"
+version = "1.0.0"
+edition = "2021"
+description = "A tiny native Markdown viewer/editor"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+rfd = "0.15"
+base64 = "0.22"
+open = "5"
+
+[profile.release]
+opt-level = "s"
+lto = true
+strip = true

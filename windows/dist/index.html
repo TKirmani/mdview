@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MDView</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/hljs-github.css" media="not (prefers-color-scheme: dark)">
+<link rel="stylesheet" href="assets/hljs-github-dark.css" media="(prefers-color-scheme: dark)">
+<style>
+  /* App chrome only — everything inside the preview is the shared stylesheet. */
+  html, body { height: 100%; margin: 0; }
+  body { display: flex; flex-direction: column; }
+  #bar {
+    display: flex; align-items: center; gap: 2px; padding: 5px 8px;
+    border-bottom: 1px solid var(--border); background: var(--code-bg);
+    font: 13px -apple-system, "Segoe UI", sans-serif; flex: none;
+  }
+  #bar button {
+    min-width: 28px; height: 24px; padding: 0 7px; cursor: pointer;
+    color: var(--fg); background: var(--bg);
+    border: 1px solid var(--border); border-radius: 5px;
+  }
+  #bar button:hover { border-color: var(--link); color: var(--link); }
+  #bar .sep { width: 1px; height: 16px; margin: 0 5px; background: var(--border); }
+  #bar .spacer { flex: 1; }
+  #name { color: var(--muted); font-size: 12px; padding-right: 8px; }
+  #name.dirty::after { content: " •"; color: var(--link); }
+  .fmt { display: none; }
+  body.editing .fmt { display: inline-block; }
+  #wrap { flex: 1; min-height: 0; overflow: auto; }
+  #editor {
+    display: none; width: 100%; height: 100%; box-sizing: border-box;
+    padding: 10px; border: 0; outline: none; resize: none;
+    color: var(--fg); background: var(--bg);
+    font: 13px/1.5 ui-monospace, Consolas, "Cascadia Mono", monospace;
+    tab-size: 2;
+  }
+  body.editing #editor { display: block; }
+  body.editing #c { display: none; }
+</style>
+</head>
+<body>
+<div id="bar">
+  <button id="open" title="Open (Ctrl+O)">Open</button>
+  <button id="save" title="Save (Ctrl+S)">Save</button>
+  <span class="sep"></span>
+  <button id="toggle" title="Edit source (Ctrl+Shift+E)">Edit</button>
+  <span class="sep fmt"></span>
+  <button class="fmt" data-kind="bold" title="Bold (Ctrl+B)"><b>B</b></button>
+  <button class="fmt" data-kind="italic" title="Italic (Ctrl+I)"><i>I</i></button>
+  <button class="fmt" data-kind="strike" title="Strikethrough (Ctrl+Shift+X)"><s>S</s></button>
+  <button class="fmt" data-kind="code" title="Inline code (Ctrl+E)">&lt;&gt;</button>
+  <button class="fmt" data-kind="codeblock" title="Code block">{ }</button>
+  <button class="fmt" data-kind="link" title="Link (Ctrl+K)">🔗</button>
+  <span class="sep fmt"></span>
+  <button class="fmt" data-kind="heading1" title="Heading 1 (Ctrl+1)">H1</button>
+  <button class="fmt" data-kind="heading2" title="Heading 2 (Ctrl+2)">H2</button>
+  <button class="fmt" data-kind="heading3" title="Heading 3 (Ctrl+3)">H3</button>
+  <span class="sep fmt"></span>
+  <button class="fmt" data-kind="quote" title="Quote (Ctrl+Shift+.)">❝</button>
+  <button class="fmt" data-kind="bullet" title="Bulleted list (Ctrl+Shift+8)">• —</button>
+  <button class="fmt" data-kind="number" title="Numbered list (Ctrl+Shift+7)">1.</button>
+  <button class="fmt" data-kind="task" title="Task list (Ctrl+Shift+L)">☑</button>
+  <button class="fmt" data-kind="table" title="Table">▦</button>
+  <span class="spacer"></span>
+  <span id="name">No document</span>
+</div>
+<div id="wrap">
+  <article id="c"></article>
+  <textarea id="editor" spellcheck="false"></textarea>
+</div>
+
+<script src="assets/marked.min.js"></script>
+<script src="assets/marked-footnote.min.js"></script>
+<script src="assets/highlight.min.js"></script>
+<script src="assets/edits.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

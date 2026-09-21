@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "MDView",
+  "version": "1.0.0",
+  "identifier": "com.tkirmani.mdview",
+  "build": {
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "MDView",
+        "width": 1200,
+        "height": 820,
+        "dragDropEnabled": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "nsis"],
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/icon.png"],
+    "fileAssociations": [
+      {
+        "ext": ["md", "markdown", "mdown"],
+        "name": "Markdown Document",
+        "role": "Editor"
+      }
+    ]
+  }
+}

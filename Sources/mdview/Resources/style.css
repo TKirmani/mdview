@@ -23,8 +23,29 @@ hr { border: 0; border-top: 3px solid var(--border); margin: 24px 0; }
 blockquote { margin: 0 0 16px; padding: 0 1em; color: var(--quote); border-left: 4px solid var(--border); }
 code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 85%; }
 code { background: var(--code-bg); padding: .2em .4em; border-radius: 6px; }
-pre { background: var(--code-bg); padding: 16px; border-radius: 6px; overflow-x: auto; line-height: 1.45; }
+pre { position: relative; background: var(--code-bg); padding: 16px; border-radius: 6px; overflow-x: auto; line-height: 1.45; }
 pre code { background: transparent; padding: 0; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px; padding: 3px 8px;
+  font: 12px -apple-system, sans-serif; color: var(--muted);
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  cursor: pointer; opacity: 0; transition: opacity .1s;
+}
+pre:hover .copy-btn { opacity: 1; }
+.copy-btn:hover { color: var(--fg); }
+li:has(> input[type="checkbox"]) > input { cursor: pointer; }
+#grant-bar {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  font: 13px -apple-system, sans-serif; color: var(--fg);
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 2px 12px rgb(0 0 0 / .18);
+}
+#grant-bar button {
+  padding: 4px 10px; font: 13px -apple-system, sans-serif; color: var(--fg);
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;
+}
+#grant-bar button:hover { border-color: var(--link); color: var(--link); }
 table { border-collapse: collapse; margin-bottom: 16px; display: block; overflow-x: auto; }
 th, td { border: 1px solid var(--border); padding: 6px 13px; }
 th { font-weight: 600; }

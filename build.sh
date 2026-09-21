@@ -1,7 +1,13 @@
 #!/bin/bash
-# Build MDView.app from the SPM executable. Usage: ./build.sh
+# Build MDView.app from the SPM executable.
+# Usage: ./build.sh [--sandbox]
+#   --sandbox  sign with the App Sandbox, as an App Store build must be. Local
+#              images then need a one-time folder grant, so it is off by default.
 set -euo pipefail
 cd "$(dirname "$0")"
+
+SANDBOX=0
+[ "${1:-}" = "--sandbox" ] && SANDBOX=1
 
 swift build -c release
 
@@ -9,7 +15,10 @@ APP=build/MDView.app
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp .build/release/mdview "$APP/Contents/MacOS/mdview"
-cp -R .build/release/mdview_mdview.bundle "$APP/Contents/Resources/"
+# Copy resources flat into Contents/Resources. The SwiftPM bundle is NOT used:
+# its generated accessor looks beside the .app, misses, and falls back to a
+# hardcoded .build path that exists only on the build machine.
+cp Sources/mdview/Resources/* "$APP/Contents/Resources/"
 [ -f AppIcon.icns ] || swift icon.swift
 cp AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 cp Info.plist "$APP/Contents/Info.plist"
@@ -29,5 +38,10 @@ cp Sources/mdview/Resources/{marked.min.js,marked-footnote.min.js,highlight.min.
 
 # sign inside-out: sandboxed appex first, then the app
 codesign --force -s - --entitlements mdpreview.entitlements "$APPEX"
-codesign --force -s - "$APP"
+if [ "$SANDBOX" = 1 ]; then
+    codesign --force -s - --entitlements mdview.entitlements "$APP"
+else
+    codesign --force -s - "$APP"
+fi
+[ "$SANDBOX" = 1 ] && echo "(sandboxed build)"
 echo "Built $APP ($(du -sh "$APP" | cut -f1)), binary $(du -h "$APP/Contents/MacOS/mdview" | cut -f1)"
